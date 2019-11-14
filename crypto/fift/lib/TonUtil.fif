@@ -14,22 +14,22 @@ library TonUtil // TON Blockchain Fift Library
 
 // Private key load/generate
 // ( fname -- pubkey privkey )
-{ dup ."Loading private key from file " type cr 
+{ dup ."Loading private key from file " type cr
   file>B dup Blen 32 <> abort"Private key must be exactly 32 bytes long"
-  dup priv>pub swap 
+  dup priv>pub swap
 } : load-keypair
 // ( fname -- pubkey privkey )
 { dup file-exists?
   { load-keypair }
   { dup newkeypair swap rot over swap B>file
-    rot ."Saved new private key to file " type cr 
+    rot ."Saved new private key to file " type cr
   } cond
 } : load-generate-keypair
 
 // Parse smart-contract address
 // ( S -- workchain addr bounce? )
 { $>smca not abort"invalid smart-contract address"
-  1 and 0= 
+  1 and 0=
 } : parse-smc-addr
 
 // ( wc addr -- )  Show address in <workchain>:<account> form
@@ -43,7 +43,7 @@ library TonUtil // TON Blockchain Fift Library
 } : save-address-verbose
 
 // ( fname -- wc addr )  Load address from file
-{ file>B 32 B| 
+{ file>B 32 B|
   dup Blen { 32 B>i@ } { drop Basechain } cond
   swap 256 B>u@
 } : load-address
@@ -64,7 +64,7 @@ library TonUtil // TON Blockchain Fift Library
 } : parse-adnl-address
 
 // ( b wc addr -- b' )  Serializes address into Builder b
-{ -rot 8 i, swap 256 u, } : addr, 
+{ -rot 8 i, swap 256 u, } : addr,
 
 // Gram utilities
 1000000000 constant Gram
@@ -148,3 +148,6 @@ recursive append-long-bytes {
 // ( x -- S )  serialize public key
 { 256 u>B B{3ee6} swap B+ dup crc16 16 u>B B+ B>base64 } : pubkey>$
 { pubkey>$ type } : .pubkey
+
+// constructor code ACCEPT PUSHREF SETCODE referencing contract code cell
+{ <b x{F80088FB04} s, swap ref, b> } : ctor
