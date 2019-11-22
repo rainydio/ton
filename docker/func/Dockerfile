@@ -5,7 +5,7 @@ COPY ./ .
 
 WORKDIR /ton-build
 RUN apk add --no-cache cmake g++ gflags-dev linux-headers make openssl-dev zlib-dev
-RUN cmake /ton
+RUN cmake -DCMAKE_BUILD_TYPE=Release /ton
 RUN cmake --build . --target func
 
 
